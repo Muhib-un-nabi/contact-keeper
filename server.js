@@ -7,14 +7,9 @@ const app = express();
 // Connect DataBase
 connectDB();
 
-// init Middleware
+// init Middlewar
 app.use(express.json({ extended: false }));
 
-app.get('/', (req, res) =>
-	res.json({
-		msg: 'Welcome To The contact keeper Apli',
-	})
-);
 // Define Routes
 
 app.use('/api/users', require('./routes/users'));
