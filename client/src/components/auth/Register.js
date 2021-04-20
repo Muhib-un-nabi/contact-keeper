@@ -7,7 +7,13 @@ const Register = (props) => {
 	const authContext = useContext(AuthContext);
 
 	const { setAlert } = alertContext;
-	const { register, error, clearError, isAuthenticated } = authContext;
+	const {
+		register,
+		error,
+		clearError,
+		isAuthenticated,
+		googleRegister,
+	} = authContext;
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -43,6 +49,11 @@ const Register = (props) => {
 				password,
 			});
 		}
+	};
+
+	const googleRegistration = (e) => {
+		e.preventDefault();
+		googleRegister();
 	};
 
 	return (
@@ -99,6 +110,12 @@ const Register = (props) => {
 					className='btn btn-primary btn-block'
 				/>
 			</form>
+			<button
+				onClick={googleRegistration}
+				style={{ border: '1px solid' }}
+				className='btn btn-light btn-block'>
+				<i className='fab fa-google' /> Register Account With Google
+			</button>
 		</div>
 	);
 };

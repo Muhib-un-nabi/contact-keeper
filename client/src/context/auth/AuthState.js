@@ -13,8 +13,11 @@ import {
 	LOGIN_FAIL,
 	LOGOUT,
 	CLEAR_ERRORS,
+	GOOGLE_AUTH_REGISTER,
+	GOOGLE_AUTH_LOGIN,
 } from '../types';
-
+const clientId =
+	'271990597142-t8lt7793fdoj4v5hmvrqr6qogvk9ucio.apps.googleusercontent.com';
 const AuthState = (props) => {
 	const initialState = {
 		token: localStorage.getItem('token'),
@@ -22,6 +25,8 @@ const AuthState = (props) => {
 		loading: true,
 		error: null,
 		user: null,
+		isgoogleAuth: null,
+		googelAuth: null,
 	};
 
 	const [state, dispatch] = useReducer(authReducer, initialState);
@@ -62,8 +67,26 @@ const AuthState = (props) => {
 		}
 	};
 
+	const googleRegister = async () => {
+		await window.gapi.load('client:auth2', async () => {
+			await window.gapi.client.init({
+				clientId,
+				scope: 'email',
+			});
+			let auth = await window.gapi.auth2.getAuthInstance();
+			await dispatch({ type: GOOGLE_AUTH_REGISTER, payload: auth });
+			await auth.signIn();
+			register({
+				name: auth.currentUser.get().getBasicProfile().getName(),
+				email: auth.currentUser.get().getBasicProfile().getEmail(),
+				password: auth.currentUser.get().getBasicProfile().getId(),
+			});
+		});
+	};
+
 	//Login User
 	const login = async (formData) => {
+		console.log(formData);
 		const config = {
 			headers: {
 				'Content-Type': 'application/json',
@@ -83,6 +106,23 @@ const AuthState = (props) => {
 			});
 		}
 	};
+	// login with Google
+	const googleLogIn = async () => {
+		await window.gapi.load('client:auth2', async () => {
+			await window.gapi.client.init({
+				clientId,
+				scope: 'email',
+			});
+			let auth = await window.gapi.auth2.getAuthInstance();
+			await dispatch({ type: GOOGLE_AUTH_REGISTER, payload: auth });
+			await auth.signIn();
+
+			login({
+				email: auth.currentUser.get().getBasicProfile().getEmail(),
+				password: auth.currentUser.get().getBasicProfile().getId(),
+			});
+		});
+	};
 
 	//Loggout
 	const logout = () => dispatch({ type: LOGOUT });
@@ -99,6 +139,8 @@ const AuthState = (props) => {
 				login,
 				logout,
 				clearError,
+				googleRegister,
+				googleLogIn,
 			}}>
 			{props.children}
 		</AuthContext.Provider>

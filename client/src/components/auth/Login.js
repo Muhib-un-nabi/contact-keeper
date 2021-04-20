@@ -7,7 +7,13 @@ const Login = (props) => {
 	const authContext = useContext(AuthContext);
 
 	const { setAlert } = alertContext;
-	const { login, error, clearError, isAuthenticated } = authContext;
+	const {
+		login,
+		error,
+		clearError,
+		isAuthenticated,
+		googleLogIn,
+	} = authContext;
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -38,6 +44,10 @@ const Login = (props) => {
 				password,
 			});
 		}
+	};
+
+	const googleLogInHandle = () => {
+		googleLogIn();
 	};
 
 	return (
@@ -72,6 +82,12 @@ const Login = (props) => {
 					className='btn btn-primary btn-block'
 				/>
 			</form>
+			<button
+				onClick={googleLogInHandle}
+				style={{ border: '1px solid' }}
+				className='btn btn-light btn-block'>
+				<i className='fab fa-google' /> LogIn Google
+			</button>
 		</div>
 	);
 };

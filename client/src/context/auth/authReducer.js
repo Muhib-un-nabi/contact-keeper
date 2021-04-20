@@ -7,6 +7,8 @@ import {
 	LOGIN_FAIL,
 	LOGOUT,
 	CLEAR_ERRORS,
+	GOOGLE_AUTH_REGISTER,
+	GOOGLE_AUTH_LOGIN,
 } from '../types';
 
 export default (state, action) => {
@@ -25,7 +27,14 @@ export default (state, action) => {
 				...state,
 				...action.payload,
 				isAuthenticated: true,
+				isgoogleAuth: true,
 				loading: false,
+			};
+		case GOOGLE_AUTH_REGISTER:
+			return {
+				...state,
+				isgoogleAuth: true,
+				googelAuth: action.payload,
 			};
 		case REGISTER_FAIL:
 		case AUTH_ERROR:
@@ -39,6 +48,8 @@ export default (state, action) => {
 				loading: false,
 				user: null,
 				error: action.payload,
+				isgoogleAuth: null,
+				googelAuth: null,
 			};
 		case CLEAR_ERRORS:
 			return {
